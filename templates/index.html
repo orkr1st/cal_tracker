@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cal Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body class="state-input">
+
+  <!-- INPUT STATE ─────────────────────────────────────── -->
+  <section id="input-view" class="view">
+
+    <header class="app-header">
+      <h1 class="wordmark">
+        <em class="wm-cal">Cal</em><span class="wm-sep"> · </span><span class="wm-track">Tracker</span>
+      </h1>
+      <p class="tagline">nutritional intelligence</p>
+    </header>
+
+    <div class="camera-wrap" id="camera-container">
+      <div class="corner corner-tl"></div>
+      <div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div>
+      <div class="corner corner-br"></div>
+
+      <video id="video" autoplay playsinline hidden></video>
+      <canvas id="canvas" hidden></canvas>
+      <img id="preview" alt="Food preview" hidden />
+
+      <div class="cam-placeholder" id="cam-placeholder">
+        <div class="cam-reticle">
+          <div class="reticle-h"></div>
+          <div class="reticle-v"></div>
+        </div>
+        <p class="cam-hint">photograph your meal</p>
+      </div>
+    </div>
+
+    <div class="actions" id="actions">
+      <button class="btn btn-primary" id="btn-camera">
+        <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="10" cy="10.5" r="3.5"/>
+          <path d="M7.5 4h5l1.5 2.5H15a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h1L7.5 4z"/>
+        </svg>
+        Use Camera
+      </button>
+      <button class="btn btn-secondary" id="btn-upload">
+        <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 14v3h14v-3M10 3v9M7 6l3-3 3 3"/>
+        </svg>
+        Upload Photo
+      </button>
+      <input type="file" id="file-input" accept="image/*" hidden />
+    </div>
+
+    <div class="ctrl-row" id="capture-controls" hidden>
+      <button class="btn btn-primary" id="btn-capture">Capture</button>
+      <button class="btn btn-ghost" id="btn-cancel-camera">Cancel</button>
+    </div>
+
+    <div class="ctrl-row" id="preview-controls" hidden>
+      <button class="btn btn-primary" id="btn-analyze">Analyse</button>
+      <button class="btn btn-ghost" id="btn-retake">Retake</button>
+    </div>
+
+  </section>
+
+  <!-- LOADING STATE ───────────────────────────────────── -->
+  <section id="loading-view" class="view">
+    <div class="loading-inner">
+      <div class="spinner" aria-hidden="true">
+        <div class="spin-ring spin-ring--outer"></div>
+        <div class="spin-ring spin-ring--inner"></div>
+        <div class="spin-dot"></div>
+      </div>
+      <p class="load-title">Analysing Specimen</p>
+      <p class="load-sub">identifying nutritional compounds&hellip;</p>
+    </div>
+  </section>
+
+  <!-- RESULTS STATE ───────────────────────────────────── -->
+  <section id="results-view" class="view">
+
+    <header class="results-hdr">
+      <div class="results-meta">
+        <span class="results-count" id="results-count">0</span>
+        <span class="results-unit">items detected</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="btn-new">← new</button>
+    </header>
+
+    <div id="food-cards" class="food-list"></div>
+
+    <div class="totals-card" id="totals-card" hidden>
+      <div class="totals-hdr">
+        <span class="totals-label">Total</span>
+        <span class="totals-rule"></span>
+      </div>
+      <div class="macro-grid" id="totals-row"></div>
+    </div>
+
+    <p id="no-food-msg" class="no-food" hidden>
+      No food detected — try a clearer photo.
+    </p>
+
+  </section>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

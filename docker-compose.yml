@@ -1,0 +1,16 @@
+services:
+  app:
+    build:
+      context: .
+      target: prod
+    image: cal_tracker:latest
+    ports:
+      - "5000:5000"
+    env_file: .env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:5000/api/health')\""]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
