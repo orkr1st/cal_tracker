@@ -16,5 +16,12 @@ ExecStart=/home/pi/cal_tracker/.venv/bin/gunicorn \
 Restart=always
 RestartSec=5
 
+# Hardening
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/home/pi/cal_tracker
+
 [Install]
 WantedBy=multi-user.target

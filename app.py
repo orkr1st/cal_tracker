@@ -1,20 +1,37 @@
-from flask import Flask, request, jsonify, render_template
-from config import SECRET_KEY, MAX_UPLOAD_BYTES
-from services.image_utils import resize_to_jpeg
+import logging
+
+from flask import Flask, jsonify, render_template, request
+
+from config import DEBUG, MAX_UPLOAD_BYTES, SECRET_KEY
 from services.claude_service import identify_foods
+from services.image_utils import resize_to_jpeg
 from services.nutrition_service import get_macros
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_BYTES
 
-ALLOWED_MIMETYPES = {
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-    "image/heic",
-    "image/heif",
-}
+
+@app.after_request
+def set_security_headers(response):
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self'; "
+        "style-src 'self' https://fonts.googleapis.com; "
+        "font-src https://fonts.gstatic.com; "
+        "img-src 'self' blob: data:; "
+        "connect-src 'self'; "
+        "media-src 'self' blob:;"
+    )
+    return response
 
 
 @app.get("/")
@@ -37,27 +54,28 @@ def analyze():
         return jsonify({"error": "Empty filename"}), 400
 
     mime = file.mimetype or ""
-    # Accept any image/* mimetype (browsers vary on HEIC reporting)
     if not mime.startswith("image/") and mime != "application/octet-stream":
-        return jsonify({"error": f"Unsupported file type: {mime}"}), 415
+        return jsonify({"error": "Unsupported file type"}), 415
 
     try:
         jpeg_bytes = resize_to_jpeg(file)
-    except Exception as e:
-        return jsonify({"error": f"Image processing failed: {e}"}), 422
+    except Exception:
+        logger.exception("Image processing failed")
+        return jsonify({"error": "Could not process image — ensure it is a valid photo"}), 422
 
     try:
         foods = identify_foods(jpeg_bytes)
-    except Exception as e:
-        return jsonify({"error": f"Food identification failed: {e}"}), 502
+    except Exception:
+        logger.exception("Food identification failed")
+        return jsonify({"error": "Food identification failed — please try again"}), 502
 
     results = []
     for food in foods:
-        macros = get_macros(food.get("search_term", food.get("name", "")))
+        search_term = food.get("search_term", food.get("name", ""))[:200]
+        macros = get_macros(search_term)
         estimated = False
 
         if macros.get("calories") is None:
-            # Both USDA and OpenFoodFacts failed — use Claude's own estimates
             macros = {
                 "calories": _to_float(food.get("est_kcal")),
                 "protein_g": _to_float(food.get("est_protein_g")),
@@ -70,12 +88,13 @@ def analyze():
             {
                 "name": food.get("name", "Unknown"),
                 "quantity": food.get("quantity", ""),
-                "search_term": food.get("search_term", ""),
+                "search_term": search_term,
                 "estimated": estimated,
                 **macros,
             }
         )
 
+    logger.info("Analysed image: %d food items found", len(results))
     return jsonify({"foods": results})
 
 
@@ -87,4 +106,4 @@ def _to_float(val) -> float | None:
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=DEBUG)
