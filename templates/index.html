@@ -19,6 +19,7 @@
         <em class="wm-cal">Cal</em><span class="wm-sep"> · </span><span class="wm-track">Tracker</span>
       </h1>
       <p class="tagline">nutritional intelligence</p>
+      <button class="btn btn-ghost btn-sm app-diary-link" id="btn-open-diary">diary →</button>
     </header>
 
     <div class="camera-wrap" id="camera-container">
@@ -90,7 +91,10 @@
         <span class="results-count" id="results-count">0</span>
         <span class="results-unit">items detected</span>
       </div>
-      <button class="btn btn-ghost btn-sm" id="btn-new">← new</button>
+      <div class="results-nav">
+        <button class="btn btn-ghost btn-sm" id="btn-diary-from-results">diary →</button>
+        <button class="btn btn-ghost btn-sm" id="btn-new">← new</button>
+      </div>
     </header>
 
     <div id="food-cards" class="food-list"></div>
@@ -105,6 +109,54 @@
 
     <p id="no-food-msg" class="no-food" hidden>
       No food detected — try a clearer photo.
+    </p>
+
+  </section>
+
+  <!-- DIARY STATE ─────────────────────────────────────── -->
+  <section id="diary-view" class="view">
+
+    <header class="diary-hdr">
+      <button class="btn btn-ghost btn-sm" id="btn-back-from-diary">← back</button>
+      <h2 class="diary-title">Diary</h2>
+    </header>
+
+    <!-- Date navigation -->
+    <div class="date-nav">
+      <button class="btn btn-ghost btn-sm date-nav-btn" id="btn-prev-day">←</button>
+      <span class="date-nav-label" id="diary-date"></span>
+      <button class="btn btn-ghost btn-sm date-nav-btn" id="btn-next-day">→</button>
+    </div>
+
+    <!-- History chart -->
+    <div class="history-card">
+      <div class="history-hdr">
+        <span class="history-label">30-day history</span>
+        <div class="macro-toggles" id="macro-toggles">
+          <button class="macro-toggle active" data-macro="calories">kcal</button>
+          <button class="macro-toggle" data-macro="protein_g">protein</button>
+          <button class="macro-toggle" data-macro="carbs_g">carbs</button>
+          <button class="macro-toggle" data-macro="fat_g">fat</button>
+        </div>
+      </div>
+      <div class="chart-wrap" id="chart-wrap">
+        <svg id="history-chart" class="history-chart"></svg>
+      </div>
+    </div>
+
+    <!-- Daily targets -->
+    <div class="targets-card" id="targets-card">
+      <div class="targets-hdr">
+        <span class="targets-label">Daily Targets</span>
+        <span class="totals-rule"></span>
+      </div>
+      <div id="progress-bars" class="progress-list"></div>
+    </div>
+
+    <div id="diary-entries" class="food-list"></div>
+
+    <p id="diary-empty-msg" class="no-food" hidden>
+      No entries yet — log a meal from the results view.
     </p>
 
   </section>

@@ -185,3 +185,30 @@ def test_analyze_bad_image_returns_422(client):
     data = {"image": (io.BytesIO(b"not an image"), "bad.jpg", "image/jpeg")}
     resp = client.post("/api/analyze", data=data, content_type="multipart/form-data")
     assert resp.status_code == 422
+
+
+# ── /api/diary/history ────────────────────────────────────────────────────────
+
+
+def test_diary_history_empty(client):
+    resp = client.get("/api/diary/history?days=7")
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert "history" in data
+    assert data["history"] == []
+
+
+def test_diary_history_after_logging(client):
+    import json
+
+    client.post(
+        "/api/diary",
+        data=json.dumps({"name": "egg", "calories": 140, "protein_g": 12, "carbs_g": 1, "fat_g": 10}),
+        content_type="application/json",
+    )
+    resp = client.get("/api/diary/history?days=7")
+    assert resp.status_code == 200
+    history = resp.get_json()["history"]
+    assert len(history) == 1
+    assert abs(history[0]["calories"] - 140.0) < 0.01
+    assert history[0]["entry_count"] == 1

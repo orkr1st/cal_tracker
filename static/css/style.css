@@ -368,6 +368,33 @@ body.state-results #results-view { display: flex; }
   text-transform: uppercase;
 }
 
+/* Editable quantity input — looks like the static label until focused */
+.food-qty-input {
+  display: block;
+  background: none;
+  border: none;
+  border-bottom: 1px dashed transparent;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  width: auto;
+  min-width: 60px;
+  max-width: 180px;
+  margin-top: 3px;
+  padding: 1px 0;
+  outline: none;
+  cursor: text;
+  transition: border-color 0.15s, color 0.15s;
+}
+.food-card:hover .food-qty-input { border-bottom-color: var(--border-2); }
+.food-qty-input:focus {
+  border-bottom-color: var(--gold);
+  color: var(--text-2);
+}
+.food-qty-input::placeholder { color: var(--text-3); opacity: 0.4; }
+
 .est-badge {
   display: inline-block;
   margin-top: 6px;
@@ -470,6 +497,288 @@ body.state-results #results-view { display: flex; }
   color: var(--text-3);
   padding: 40px 0;
 }
+
+/* ── Results nav ────────────────────────────────────────────────────────── */
+.results-nav { display: flex; gap: 4px; align-items: center; }
+
+/* ── App diary link (input view) ────────────────────────────────────────── */
+.app-diary-link {
+  display: block;
+  margin: 4px auto 0;
+  color: var(--text-3);
+  font-size: 0.60rem;
+  letter-spacing: 0.12em;
+}
+.app-diary-link:hover { color: var(--gold); }
+
+/* ── Diary view ─────────────────────────────────────────────────────────── */
+body.state-diary #diary-view { display: flex; }
+
+.diary-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 20px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.diary-title {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1;
+  flex: 1;
+}
+
+/* ── Date navigation ────────────────────────────────────────────────────── */
+.date-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.date-nav-btn {
+  font-size: 1rem;
+  padding: 4px 10px;
+  flex-shrink: 0;
+}
+.date-nav-btn:disabled { opacity: 0.25; pointer-events: none; }
+
+.date-nav-label {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--text);
+  text-align: center;
+  flex: 1;
+}
+
+/* ── History chart card ─────────────────────────────────────────────────── */
+.history-card {
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  padding: 12px 14px 14px;
+  background: var(--surface);
+}
+
+.history-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.history-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.macro-toggles {
+  display: flex;
+  gap: 4px;
+}
+
+.macro-toggle {
+  background: transparent;
+  border: 1px solid var(--border-2);
+  border-radius: 3px;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 6px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.macro-toggle[data-macro="calories"].active  { color: var(--cal);  border-color: var(--cal);  }
+.macro-toggle[data-macro="protein_g"].active { color: var(--prot); border-color: var(--prot); }
+.macro-toggle[data-macro="carbs_g"].active   { color: var(--carb); border-color: var(--carb); }
+.macro-toggle[data-macro="fat_g"].active     { color: var(--fat);  border-color: var(--fat);  }
+
+.chart-wrap {
+  position: relative;
+  height: 80px;
+  width: 100%;
+}
+
+.history-chart {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ── Targets / progress bars ────────────────────────────────────────────── */
+.targets-card {
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  padding: 14px 16px 16px;
+  background: var(--surface);
+}
+
+.targets-hdr {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.targets-label {
+  font-size: 0.60rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.progress-list { display: flex; flex-direction: column; gap: 10px; }
+
+.progress-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.progress-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.progress-value {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.progress-track {
+  height: 4px;
+  background: var(--border-2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.progress-row.pr-cal  .progress-label,
+.progress-row.pr-cal  .progress-value { color: var(--cal); }
+.progress-row.pr-cal  .progress-fill  { background: var(--cal); }
+
+.progress-row.pr-prot .progress-label,
+.progress-row.pr-prot .progress-value { color: var(--prot); }
+.progress-row.pr-prot .progress-fill  { background: var(--prot); }
+
+.progress-row.pr-carb .progress-label,
+.progress-row.pr-carb .progress-value { color: var(--carb); }
+.progress-row.pr-carb .progress-fill  { background: var(--carb); }
+
+.progress-row.pr-fat  .progress-label,
+.progress-row.pr-fat  .progress-value { color: var(--fat); }
+.progress-row.pr-fat  .progress-fill  { background: var(--fat); }
+
+/* ── Diary entry card ───────────────────────────────────────────────────── */
+.diary-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  animation: card-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.diary-card-info { flex: 1; min-width: 0; }
+
+.diary-card-name {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.diary-card-qty {
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.diary-card-macros {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.diary-macro {
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.diary-macro.dm-cal  { color: var(--cal); }
+.diary-macro.dm-prot { color: var(--prot); }
+.diary-macro.dm-carb { color: var(--carb); }
+.diary-macro.dm-fat  { color: var(--fat); }
+
+.btn-delete {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-3);
+  padding: 4px;
+  line-height: 1;
+  font-size: 0.9rem;
+  transition: color 0.15s;
+}
+.btn-delete:hover { color: var(--cal); }
+
+/* ── Log-to-diary button on food cards ──────────────────────────────────── */
+.btn-log {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--border-2);
+  border-radius: var(--r);
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-log:hover { border-color: var(--jade); color: var(--jade); }
+.btn-log.logged { border-color: var(--jade); color: var(--jade); pointer-events: none; }
 
 /* ── Responsive ─────────────────────────────────────────────────────────── */
 @media (min-width: 480px) {
